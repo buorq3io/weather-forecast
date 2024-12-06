@@ -1,4 +1,6 @@
 import numpy as np
+import seaborn as sns
+from calendar import Calendar
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.inspection import permutation_importance
@@ -50,6 +52,7 @@ plt.title("Actual vs. Predicted Temperatures")
 plt.legend()
 plt.tight_layout()
 plt.savefig(f"figures/predictions_{model_id}.png", dpi=600)
+
 
 # %% Permutation importance plot
 
@@ -106,3 +109,71 @@ plt.axvline(x=0, color='black', linestyle='--', lw=1)
 
 plt.tight_layout()
 plt.savefig(f"figures/permutations_{model_id}.png", dpi=600)
+
+# %% Error calendar view plot
+custom_cmap = sns.diverging_palette(145, 300, s=60, as_cmap=True)
+
+# Example prediction errors for 30 days (replace with actual data)
+daily_errors = [y_pred[i] - y_test[i] for i in range(len(y_test))]
+daily_errors = np.array(daily_errors)
+
+norm = plt.Normalize(-round(max(daily_errors)), round(max(daily_errors)))
+
+# Generate a calendar for November 2024
+cal = Calendar()
+year, month = 2024, 11
+month_days = cal.monthdayscalendar(year, month)
+
+# Set up the plot
+fig, ax = plt.subplots(figsize=(10, 8))
+ax.set_title(f"Daily Prediction Errors - November {year}",
+             fontsize=18, fontweight='bold', pad=20)
+
+# Plot each day in the calendar
+day_counter = 0
+for week_idx, week in enumerate(month_days):
+    week_idx += 1
+    for day_idx, day in enumerate(week):
+        if day == 0:
+            continue
+
+        error = daily_errors[day_counter]
+        color = custom_cmap(norm(error))
+
+        # Add a colored rectangle for each day
+        ax.add_patch(plt.Rectangle((day_idx, -week_idx), 1, 1,
+                                   facecolor=color, edgecolor='black', lw=0.5))
+
+        # Add the date and error value
+        ax.text(day_idx + 0.5, -week_idx + 0.65, f"{day}",
+                ha="center", va="center", fontsize=12, fontweight='bold')
+        ax.text(day_idx + 0.5, -week_idx + 0.3, f"{error:.2f}",
+                ha="center", va="center", fontsize=10, color="black")
+
+        day_counter += 1
+
+# Customize the axes
+ax.set_xticks(np.arange(0.5, 7.5, 1))
+ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                   fontsize=10, fontweight='bold')
+ax.set_yticks(range(-len(month_days), 0))
+ax.set_yticklabels([])
+
+ax.set_xlim(0, 7)
+ax.set_ylim(-len(month_days), 0)
+ax.set_aspect("equal")
+
+# Add a color bar
+sm = plt.cm.ScalarMappable(cmap=custom_cmap, norm=norm)
+sm.set_array([])
+
+cbar = fig.colorbar(sm, ax=ax, orientation="horizontal", pad=0.1, aspect=40)
+cbar.set_label("Prediction Error (C°)", fontsize=12)
+
+# # Add gridlines for visual clarity
+for x_i in range(7):
+    ax.axvline(x_i, color='black', linewidth=0.8, alpha=0.5)
+for y_i in range(-len(month_days), 1):
+    ax.axhline(y_i, color='black', linewidth=0.8, alpha=0.5)
+
+plt.savefig(f"figures/calendar_{model_id}.png", dpi=600)
