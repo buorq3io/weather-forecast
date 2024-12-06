@@ -1,0 +1,10 @@
+# Environment variables
+.env
+
+# IDEs
+.idea
+.fleet
+.vscode
+
+# Cache
+__pycache__
