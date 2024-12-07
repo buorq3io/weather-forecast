@@ -11,3 +11,7 @@ def get_model(n_inputs):
 
     model = models.Model(signal, output)
     return model
+
+
+if __name__ == '__main__':
+    print(get_model(8).summary())
