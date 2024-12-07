@@ -1,5 +1,8 @@
-# Environment variables
+# Environment Variables
 .env
+
+# Sensitive Data
+/data/
 
 # IDEs
 .idea
