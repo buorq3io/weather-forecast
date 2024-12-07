@@ -106,8 +106,10 @@ def get_dataset(*args) -> tuple[np.ndarray, np.ndarray]:
 
 
 def get_data_train_test_split(*args, shuffle=True):
-    nov_1 = 327
     inputs, labels = get_dataset(*args)
+
+    nov_1_timestamp = 1730408400
+    nov_1 = np.argmax(np.any(inputs[:, :, 0] >= nov_1_timestamp, axis=1)) - 1
 
     x_test, y_test = inputs[nov_1:], labels[nov_1:]
     x_train, y_train = inputs[:nov_1], labels[:nov_1]
