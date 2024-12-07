@@ -18,12 +18,11 @@ An LSTM layer with 64 units to capture long-term patterns, fully connected dense
 ##### Clone the Repository:
 ```shell
 git clone https://github.com/buorq3io/weather-forecast.git
-cd weather-forecast
 ```
 
 ##### Build the Docker Tensorflow Image
 ```shell
-docker build -t weather-prediction .
+cd weather-forecast && docker build -t weather-prediction .
 ```
 
 ##### Download Dataset:
