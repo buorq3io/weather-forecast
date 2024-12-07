@@ -37,6 +37,9 @@ def _fetch_multiple(city_id: int, timestamps: list[datetime], offset=0):
                 data.append(result)
                 print(f"Done: {futures[future].strftime('%y-%m-%d')}")
 
+    if not os.path.exists("data"):
+        os.mkdir("data")
+
     with open("data/data.json", "w") as file:
         json.dump(data, file)
 
