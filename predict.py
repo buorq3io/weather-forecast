@@ -10,9 +10,9 @@ mixed_precision.set_global_policy("mixed_float16")
 from dataset import get_data_train_test_split, get_feature_names
 
 model_id = 16
-model = models.load_model(f"models/model_{model_id}.keras", compile=False)
+model = models.load_model(f"models/model_{model_id}.keras")
 
-_, _, x_test, y_test = get_data_train_test_split()
+_, _, x_test, y_test = get_data_train_test_split(shuffle=False)
 
 mask = [1, 5, 6, 7, 8, 9, 10, 11]
 feature_names = get_feature_names()[mask]
