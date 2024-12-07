@@ -28,7 +28,7 @@ y_pred = model.predict(x_test, batch_size=1).flatten()
 plt.scatter(y_test + k_to_c, y_pred + k_to_c, c=lilac, alpha=0.6, label="Data Points")
 
 loss, mse, mae = model.evaluate(x_test, y_test, batch_size=1)
-print(f"Test MSE: {mse}, MAE: {mae}")
+print(f"Test RMSE: {np.sqrt(mse)}, MAE: {mae}")
 
 # Fit a regression line
 regressor = LinearRegression()
@@ -44,18 +44,20 @@ plt.plot(x_range, m * (x_range - k_to_c) + b + k_to_c,
 identity_line = np.linspace(min(y_test) - 1.5, max(y_test) + 1.5, 200) + k_to_c
 plt.plot(identity_line, identity_line, color=green, linewidth=2, linestyle='--', label="Identity")
 
+# Add error metrics as text on the plot
+text_str = f"Mean Absolute Error: {mae:.2f}°C\n\nRoot Mean Square Error: {np.sqrt(mse):.2f}°C"
+plt.text(0.05, 0.95, text_str, transform=plt.gca().transAxes, fontsize=7, verticalalignment='top',
+         bbox=dict(facecolor='white', alpha=0.7, edgecolor='none', boxstyle='round,pad=0.5'))
+
 # Finalize plot
 plt.xlabel("Actual Temperatures (C°)")
 plt.ylabel("Predicted Temperatures (C°)")
 plt.title("Actual vs. Predicted Temperatures")
 
 plt.legend()
-plt.tight_layout()
 plt.savefig(f"figures/predictions_{model_id}.png", dpi=600)
 
-
 # %% Permutation importance plot
-
 class ModelPermute:
     def __init__(self, model_p: models.Model, original_shape):
         self.model = model_p
