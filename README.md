@@ -34,7 +34,7 @@ Delete the generated files to fetch again in case of an error.
 ### Usage
 ##### Run tensorflow image:
 ```shell
-docker run -v ~/path-to-project/weather-forecast:/opt/project --rm --gpus all weather-forecast
+docker run -v ~/path-to-project/weather-forecast:/opt/project -it --env TF_CPP_MIN_LOG_LEVEL=3 --rm --gpus all weather-forecast bash
 cd /opt/project && export OPEN_WEATHER_API_KEY=your-api-key
 ```
 
@@ -56,7 +56,7 @@ python3 predict.py
 ##### Or use a jupyter notebook (Alternative):
 Use the `workshop.ipynb` file to connect to the container using the started jupyter server.
 ```shell
-docker run -p 8888:8888 -p 6006:6006 -v ~/path-to-project/weather-forecast:/opt/project --env TF_CPP_MIN_LOG_LEVEL=3 --pull missing --rm --gpus all weather-forecast
+docker run -p 8888:8888 -p 6006:6006 -v ~/path-to-project/weather-forecast:/opt/project --env TF_CPP_MIN_LOG_LEVEL=3 --rm --gpus all weather-forecast
 ```
 
 ### Additional Models and Visualizations
